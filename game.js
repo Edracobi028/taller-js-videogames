@@ -42,8 +42,20 @@ function startGame() {
     game.font = elementsSize + 'px Verdana'; //Le damos tamaño de manera dinamica e indicamos tipo fuente
     game.textAlign = 'end'; //posicionarlo al inicio de la 1ra linea
 
-    for (let i = 1; i <= 10; i++) {
-        game.fillText(emojis['X'], elementsSize, elementsSize * i); //insertamos un emoji + posicion-x + posicion-y
+    const map = maps[0]; //Cargar el arreglo de los mapas
+    //array para crear los strings que forman las columnas osea en cada salto d elinea
+    const mapRows = map.trim().split('\n'); //conseguir las filas del mapa
+    const mapRowCols = mapRows.map(row => row.trim().split('')); //para conseguir filas y cada elemento es un elemento de un arreglo
+    console.log({
+        map,
+        mapRows,
+        mapRowCols
+    });
+
+    for (let row = 1; row <= 10; row++) {
+        for (let col = 1; col <= 10; col++) {
+            game.fillText(emojis[mapRowCols[row - 1][col - 1]], elementsSize * col, elementsSize * row); //insertamos un emoji + posicion-x + posicion-y
+        }
     }
 
 }
