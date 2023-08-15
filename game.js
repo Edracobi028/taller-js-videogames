@@ -46,10 +46,10 @@ function setCanvasSize() {
 
 function startGame() {
 
-    console.log({
+    /* console.log({
         canvasSize,
         elementsSize
-    });
+    }); */
 
     game.font = elementsSize + 'px Verdana'; //Le damos tamaño de manera dinamica e indicamos tipo fuente
     game.textAlign = 'end'; //posicionarlo al inicio de la 1ra linea
@@ -57,11 +57,11 @@ function startGame() {
     const map = maps[0]; //Cargar el arreglo de los mapas
     const mapRows = map.trim().split('\n'); //array para crear los strings que forman las columnas osea en cada salto de linea y asi conseguir las filas del mapa
     const mapRowCols = mapRows.map(row => row.trim().split('')); //para conseguir filas y cada elemento es un elemento de un arreglo (Array bidimensional del string de nuestro mapa)
-    console.log({
+    /* console.log({
         map,
         mapRows,
         mapRowCols
-    });
+    }); */
 
     //Borrar todo desde la posicion cero a lo que mide el canvas
     game.clearRect(0,0,canvasSize, canvasSize);
@@ -120,21 +120,39 @@ function moveByKeys(event){
 //Diferentes movimientos
 function moveUp(){
     console.log('Me quiero mover hacia arriba');
-    playerPosition.y -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
-    startGame();
+    //validar si es negativo o superior a la medida del canvas
+    if((playerPosition.y - elementsSize) < elementsSize){
+        console.log('OUT');
+    }else{
+        playerPosition.y -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
+        startGame();
+    }
+
 }
 function moveLeft(){
     console.log('Me quiero mover hacia izquierda');
-    playerPosition.x -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
-    startGame();
+    if((playerPosition.x - elementsSize) < elementsSize){
+        console.log('OUT');
+    }else{
+        playerPosition.x -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
+        startGame();
+    }
 }
 function moveRight(){
     console.log('Me quiero mover hacia derecha');
-    playerPosition.x += elementsSize; //Sumar o restar el elementSize (px rendondeados)
-    startGame();
+    if((playerPosition.x + elementsSize) > canvasSize){
+        console.log('OUT');
+    }else{
+        playerPosition.x += elementsSize; //Sumar o restar el elementSize (px rendondeados)
+        startGame();
+    }
 }
 function moveDown(){
     console.log('Me quiero mover hacia abajo');
-    playerPosition.y += elementsSize; //Sumar o restar el elementSize (px rendondeados)
-    startGame();
+    if((playerPosition.y + elementsSize) > canvasSize){
+        console.log('OUT');
+    }else{
+        playerPosition.y += elementsSize; //Sumar o restar el elementSize (px rendondeados)
+        startGame();
+    }
 }
