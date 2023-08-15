@@ -14,6 +14,12 @@ const btnDown = document.querySelector('#down'); //identificarlo por su id
 let canvasSize;
 let elementsSize; //en base al ancho que toma, calcular los elemntos 10 x 10
 
+//Coordenadas del jugador, un objeto GLOBAL con las coordenadas sin definir
+const playerPosition = {
+    x: undefined,
+    y: undefined,
+};
+
 window.addEventListener("load", setCanvasSize); //evento ''load'' para que apenas cargue iniciar codigo
 window.addEventListener('resize', setCanvasSize); //evento ''resize'' para saber cuando cambian las medidas de nuestro navegador
 
@@ -62,16 +68,27 @@ function startGame() {
             const emoji = emojis[col];
             const posX = elementsSize * (colI + 1);
             const posY = elementsSize * (rowI + 1);
+
+            //Posicionar al jughador en la puerta o posicion inicial donde el emoji es la puerta
+            if(col == 'O'){
+                console.log(posX,posY);
+                playerPosition.x = posX; //llamamos a la prodiedad x del objeto player Position
+                playerPosition.y = posY; //llamamos a la prodiedad y del objeto player Position
+                console.log({playerPosition});
+            }
+
             game.fillText(emoji, posX, posY);
         });
     });
 
-    /* for (let row = 1; row <= 10; row++) {
-        for (let col = 1; col <= 10; col++) {
-            game.fillText(emojis[mapRowCols[row - 1][col - 1]], elementsSize * col, elementsSize * row); //insertamos un emoji + posicion-x + posicion-y
-        }
-    } */
+    movePlayer(); //aparecer al jugador
 
+}
+
+//renderizar al mover el jugador
+function movePlayer(){
+    //renderizar al jugador ya con la posicion inicial llamando al array con emojis + posicion
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
 
 //Detectar el evento de los botones de la plantalla que relaciona las funciones tecla + funcion (que quiero hacer?)
@@ -86,7 +103,7 @@ window.addEventListener('keydown', moveByKeys);
 //Detectamos que tecla se esta presionando recibiendo un evento
 function moveByKeys(event){
     
-    if(event.key == 'ArrowUp') moveUp();
+    if (event.key == 'ArrowUp') moveUp();
     else if (event.key == 'ArrowDown') moveDown();
     else if (event.key == 'ArrowLeft') moveLeft();
     else if (event.key == 'ArrowRight')moveRight();
@@ -96,6 +113,9 @@ function moveByKeys(event){
 //Diferentes movimientos
 function moveUp(){
     console.log('Me quiero mover hacia arriba');
+    //Sumar o restar el elementSize (px rendondeados)
+    playerPosition.y -= elementsSize;
+    movePlayer();
 }
 function moveLeft(){
     console.log('Me quiero mover hacia izquierda');
