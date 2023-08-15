@@ -63,6 +63,10 @@ function startGame() {
         mapRowCols
     });
 
+    //Borrar todo desde la posicion cero a lo que mide el canvas
+    game.clearRect(0,0,canvasSize, canvasSize);
+
+    //Renderizado del mapa
     mapRowCols.forEach((row, rowI) => {
         row.forEach( (col, colI) => {
             const emoji = emojis[col];
@@ -71,17 +75,20 @@ function startGame() {
 
             //Posicionar al jughador en la puerta o posicion inicial donde el emoji es la puerta
             if(col == 'O'){
-                console.log(posX,posY);
-                playerPosition.x = posX; //llamamos a la prodiedad x del objeto player Position
-                playerPosition.y = posY; //llamamos a la prodiedad y del objeto player Position
-                console.log({playerPosition});
+                //si es undefined dar posicion inicial
+                if(!playerPosition.x && !playerPosition.y){
+                    playerPosition.x = posX; //llamamos a la prodiedad x del objeto player Position
+                    playerPosition.y = posY; //llamamos a la prodiedad y del objeto player Position
+                    console.log({playerPosition});
+                }
+
             }
 
             game.fillText(emoji, posX, posY);
         });
     });
 
-    movePlayer(); //aparecer al jugador
+    movePlayer(); //Renderizar al jugador
 
 }
 
@@ -113,16 +120,21 @@ function moveByKeys(event){
 //Diferentes movimientos
 function moveUp(){
     console.log('Me quiero mover hacia arriba');
-    //Sumar o restar el elementSize (px rendondeados)
-    playerPosition.y -= elementsSize;
-    movePlayer();
+    playerPosition.y -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
+    startGame();
 }
 function moveLeft(){
     console.log('Me quiero mover hacia izquierda');
+    playerPosition.x -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
+    startGame();
 }
 function moveRight(){
     console.log('Me quiero mover hacia derecha');
+    playerPosition.x += elementsSize; //Sumar o restar el elementSize (px rendondeados)
+    startGame();
 }
 function moveDown(){
     console.log('Me quiero mover hacia abajo');
+    playerPosition.y += elementsSize; //Sumar o restar el elementSize (px rendondeados)
+    startGame();
 }
