@@ -19,6 +19,11 @@ const playerPosition = {
     x: undefined,
     y: undefined,
 };
+//coordenadas para elementos fijos como el regalo
+const giftPosition = {
+    x: undefined,
+    y: undefined,
+};
 
 window.addEventListener("load", setCanvasSize); //evento ''load'' para que apenas cargue iniciar codigo
 window.addEventListener('resize', setCanvasSize); //evento ''resize'' para saber cuando cambian las medidas de nuestro navegador
@@ -64,24 +69,28 @@ function startGame() {
     }); */
 
     //Borrar todo desde la posicion cero a lo que mide el canvas
-    game.clearRect(0,0,canvasSize, canvasSize);
+    game.clearRect(0, 0, canvasSize, canvasSize);
 
     //Renderizado del mapa
     mapRowCols.forEach((row, rowI) => {
-        row.forEach( (col, colI) => {
+        row.forEach((col, colI) => {
             const emoji = emojis[col];
             const posX = elementsSize * (colI + 1);
             const posY = elementsSize * (rowI + 1);
 
             //Posicionar al jughador en la puerta o posicion inicial donde el emoji es la puerta
-            if(col == 'O'){
+            if (col == 'O') {
                 //si es undefined dar posicion inicial
-                if(!playerPosition.x && !playerPosition.y){
+                if (!playerPosition.x && !playerPosition.y) {
                     playerPosition.x = posX; //llamamos a la prodiedad x del objeto player Position
                     playerPosition.y = posY; //llamamos a la prodiedad y del objeto player Position
-                    console.log({playerPosition});
+                    console.log({
+                        playerPosition
+                    });
                 }
-
+            } else if (col == 'I') {
+                giftPosition.x = posX;
+                giftPosition.y = posY;
             }
 
             game.fillText(emoji, posX, posY);
@@ -93,7 +102,19 @@ function startGame() {
 }
 
 //renderizar al mover el jugador
-function movePlayer(){
+function movePlayer() {
+
+    //verificar si las coordenadas en x coinciden
+    const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
+    const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
+
+    //obtener una variable true si ambas coordenadas son true
+    const giftCollision = giftCollisionX && giftCollisionY;
+
+    //Si se cumple cambiamos de nivel
+    if (giftCollision) {
+        console.log('Subiste de nivel!');
+    }
     //renderizar al jugador ya con la posicion inicial llamando al array con emojis + posicion
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
@@ -108,50 +129,53 @@ btnDown.addEventListener('click', moveDown);
 window.addEventListener('keydown', moveByKeys);
 
 //Detectamos que tecla se esta presionando recibiendo un evento
-function moveByKeys(event){
-    
+function moveByKeys(event) {
+
     if (event.key == 'ArrowUp') moveUp();
     else if (event.key == 'ArrowDown') moveDown();
     else if (event.key == 'ArrowLeft') moveLeft();
-    else if (event.key == 'ArrowRight')moveRight();
-    
+    else if (event.key == 'ArrowRight') moveRight();
+
 }
 
 //Diferentes movimientos
-function moveUp(){
+function moveUp() {
     console.log('Me quiero mover hacia arriba');
     //validar si es negativo o superior a la medida del canvas
-    if((playerPosition.y - elementsSize) < elementsSize){
+    if ((playerPosition.y - elementsSize) < elementsSize) {
         console.log('OUT');
-    }else{
+    } else {
         playerPosition.y -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
         startGame();
     }
 
 }
-function moveLeft(){
+
+function moveLeft() {
     console.log('Me quiero mover hacia izquierda');
-    if((playerPosition.x - elementsSize) < elementsSize){
+    if ((playerPosition.x - elementsSize) < elementsSize) {
         console.log('OUT');
-    }else{
+    } else {
         playerPosition.x -= elementsSize; //Sumar o restar el elementSize (px rendondeados)
         startGame();
     }
 }
-function moveRight(){
+
+function moveRight() {
     console.log('Me quiero mover hacia derecha');
-    if((playerPosition.x + elementsSize) > canvasSize){
+    if ((playerPosition.x + elementsSize) > canvasSize) {
         console.log('OUT');
-    }else{
+    } else {
         playerPosition.x += elementsSize; //Sumar o restar el elementSize (px rendondeados)
         startGame();
     }
 }
-function moveDown(){
+
+function moveDown() {
     console.log('Me quiero mover hacia abajo');
-    if((playerPosition.y + elementsSize) > canvasSize){
+    if ((playerPosition.y + elementsSize) > canvasSize) {
         console.log('OUT');
-    }else{
+    } else {
         playerPosition.y += elementsSize; //Sumar o restar el elementSize (px rendondeados)
         startGame();
     }
