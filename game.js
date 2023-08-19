@@ -13,6 +13,7 @@ const btnDown = document.querySelector('#down'); //identificarlo por su id
 //Definir variables
 let canvasSize;
 let elementsSize; //en base al ancho que toma, calcular los elemntos 10 x 10
+let level = 0; //posicion del array del nivel del juego
 
 //Coordenadas del jugador, un objeto GLOBAL con las coordenadas sin definir
 const playerPosition = {
@@ -57,7 +58,13 @@ function startGame() {
     game.font = elementsSize + 'px Verdana'; //Le damos tamaño de manera dinamica e indicamos tipo fuente
     game.textAlign = 'end'; //posicionarlo al inicio de la 1ra linea
 
-    const map = maps[0]; //Cargar el arreglo de los mapas
+    const map = maps[level]; //Cargar el arreglo de los mapas
+
+    if (!map) {
+        gameWin();
+        return; //Return para parar la ejecución del juego
+    }
+    //Si ya no hay mapas terminar el juego
     const mapRows = map.trim().split('\n'); //array para crear los strings que forman las columnas osea en cada salto de linea y asi conseguir las filas del mapa
     const mapRowCols = mapRows.map(row => row.trim().split('')); //para conseguir filas y cada elemento es un elemento de un arreglo (Array bidimensional del string de nuestro mapa)
 
@@ -113,6 +120,7 @@ function movePlayer() {
     //Si se cumple cambiamos de nivel
     if (giftCollision) {
         console.log('Subiste de nivel!');
+        levelWin();
     }
 
     //validar si la posicion del jugador colisiona con un enemigo
@@ -129,6 +137,16 @@ function movePlayer() {
 
     //renderizar al jugador ya con la posicion inicial llamando al array con emojis + posicion
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+}
+
+function levelWin() {
+    console.log('Subiste de nivel!');
+    level++;
+    startGame();
+}
+
+function gameWin() {
+    console.log('Terminaste el juego !!!!');
 }
 
 //Detectar el evento de los botones de la plantalla que relaciona las funciones tecla + funcion (que quiero hacer?)
@@ -149,7 +167,6 @@ function moveByKeys(event) {
     else if (event.key == 'ArrowRight') moveRight();
 
 }
-
 //Diferentes movimientos
 function moveUp() {
     console.log('Me quiero mover hacia arriba');
