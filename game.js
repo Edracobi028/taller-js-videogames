@@ -24,6 +24,9 @@ const giftPosition = {
     x: undefined,
     y: undefined,
 };
+//coordenadas de enemigos
+let enemyPositions = [];
+
 
 window.addEventListener("load", setCanvasSize); //evento ''load'' para que apenas cargue iniciar codigo
 window.addEventListener('resize', setCanvasSize); //evento ''resize'' para saber cuando cambian las medidas de nuestro navegador
@@ -51,25 +54,17 @@ function setCanvasSize() {
 
 function startGame() {
 
-    /* console.log({
-        canvasSize,
-        elementsSize
-    }); */
-
     game.font = elementsSize + 'px Verdana'; //Le damos tamaño de manera dinamica e indicamos tipo fuente
     game.textAlign = 'end'; //posicionarlo al inicio de la 1ra linea
 
     const map = maps[0]; //Cargar el arreglo de los mapas
     const mapRows = map.trim().split('\n'); //array para crear los strings que forman las columnas osea en cada salto de linea y asi conseguir las filas del mapa
     const mapRowCols = mapRows.map(row => row.trim().split('')); //para conseguir filas y cada elemento es un elemento de un arreglo (Array bidimensional del string de nuestro mapa)
-    /* console.log({
-        map,
-        mapRows,
-        mapRowCols
-    }); */
+
 
     //Borrar todo desde la posicion cero a lo que mide el canvas
     game.clearRect(0, 0, canvasSize, canvasSize);
+    enemyPositions = [];
 
     //Renderizado del mapa
     mapRowCols.forEach((row, rowI) => {
@@ -91,6 +86,12 @@ function startGame() {
             } else if (col == 'I') {
                 giftPosition.x = posX;
                 giftPosition.y = posY;
+            } else if (col == 'X') {
+                //Entrar a el array e insertar un objeto de la posicion
+                enemyPositions.push({
+                    x: posX,
+                    y: posY,
+                });
             }
 
             game.fillText(emoji, posX, posY);
@@ -107,14 +108,25 @@ function movePlayer() {
     //verificar si las coordenadas en x coinciden
     const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
     const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
-
-    //obtener una variable true si ambas coordenadas son true
-    const giftCollision = giftCollisionX && giftCollisionY;
+    const giftCollision = giftCollisionX && giftCollisionY; //obtener una variable true si ambas coordenadas son true
 
     //Si se cumple cambiamos de nivel
     if (giftCollision) {
         console.log('Subiste de nivel!');
     }
+
+    //validar si la posicion del jugador colisiona con un enemigo
+    const enemyCollision = enemyPositions.find(enemy => {
+        const enemyCollisionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
+        const enemyCollisionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
+
+        return enemyCollisionX && enemyCollisionY; //devolver true si coinciden estas dos variables
+
+    });
+    if (enemyCollision) {
+        console.log('Chocaste con el enemigo!');
+    }
+
     //renderizar al jugador ya con la posicion inicial llamando al array con emojis + posicion
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
