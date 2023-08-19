@@ -14,6 +14,7 @@ const btnDown = document.querySelector('#down'); //identificarlo por su id
 let canvasSize;
 let elementsSize; //en base al ancho que toma, calcular los elemntos 10 x 10
 let level = 0; //posicion del array del nivel del juego
+let lives = 3; //variable para las vidas para en caso de perderlas inicar en el nivel cero
 
 //Coordenadas del jugador, un objeto GLOBAL con las coordenadas sin definir
 const playerPosition = {
@@ -132,7 +133,7 @@ function movePlayer() {
 
     });
     if (enemyCollision) {
-        console.log('Chocaste con el enemigo!');
+        levelFail();
     }
 
     //renderizar al jugador ya con la posicion inicial llamando al array con emojis + posicion
@@ -143,6 +144,21 @@ function levelWin() {
     console.log('Subiste de nivel!');
     level++;
     startGame();
+}
+
+function levelFail() {
+    console.log('Chocaste con el enemigo!');
+    lives--; //reste uno
+
+    console.log('Vidas = ' + lives)
+    if (lives <= 0) {
+        level = 0;
+        lives = 3;
+    }
+    //resetear las posiciones del jugador como undefined para que al renderizar lo coloque a posicion inciial
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    startGame(); //llama para renderizar el juego
 }
 
 function gameWin() {
