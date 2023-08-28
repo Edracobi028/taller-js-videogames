@@ -15,6 +15,8 @@ const spanLives = document.querySelector('#lives');
 
 //Tiempo
 const spanTime = document.querySelector('#time');
+const spanRecord = document.querySelector('#record');
+const pResult = document.querySelector('#result');
 
 
 //Definir variables
@@ -81,6 +83,7 @@ function startGame() {
     if (!timeStart) {
         timeStart = Date.now();
         timeInterval = setInterval(showTime, 100) //repetir la accion cada 100 ms e imprimir el tiempo con la funcion creada
+        showRecord();
     }
 
     //Si ya no hay mapas terminar el juego
@@ -186,6 +189,25 @@ function levelFail() {
 function gameWin() {
     console.log('Terminaste el juego !!!!');
     clearInterval(timeInterval); //detener el ciclo
+    const recordTime = localStorage.getItem('record_time'); //verificar si tenemos guardado en variable de record
+    const playerTime = Date.now() - timeStart; //guardar tiempo del jugador
+
+    if (recordTime) { //si record existe guardar en variable el tiempo actual
+
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime); //guardamos en local el tiempo del jugador
+            pResult.innerHTML = 'superaste el record!';
+        } else {
+            pResult.innerHTML = 'no superaste el record';
+        }
+    } else {
+        localStorage.setItem('record_time', playerTime);
+        pResult.innerHTML = 'Primera Vez?';
+    }
+    console.log({
+        recordTime,
+        playerTime
+    });
 }
 
 function showLives() {
@@ -197,8 +219,11 @@ function showLives() {
 }
 
 function showTime() {
-
     spanTime.innerHTML = Date.now() - timeStart; //poner el tiempo en el span
+}
+
+function showRecord() {
+    spanRecord.innerHTML = localStorage.getItem('record_time');
 }
 
 //Detectar el evento de los botones de la plantalla que relaciona las funciones tecla + funcion (que quiero hacer?)
