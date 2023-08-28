@@ -13,11 +13,19 @@ const btnDown = document.querySelector('#down'); //identificarlo por su id
 //Vidas
 const spanLives = document.querySelector('#lives');
 
+//Tiempo
+const spanTime = document.querySelector('#time');
+
+
 //Definir variables
 let canvasSize;
 let elementsSize; //en base al ancho que toma, calcular los elemntos 10 x 10
 let level = 0; //posicion del array del nivel del juego
 let lives = 3; //variable para las vidas para en caso de perderlas inicar en el nivel cero
+
+let timeStart; //variable de tiempo
+let timePlayer;
+let timeInterval; //variable donde guardamos la ejecución
 
 //Coordenadas del jugador, un objeto GLOBAL con las coordenadas sin definir
 const playerPosition = {
@@ -68,6 +76,13 @@ function startGame() {
         gameWin();
         return; //Return para parar la ejecución del juego
     }
+
+    //Activar el tiempo si la variable esta vacia
+    if (!timeStart) {
+        timeStart = Date.now();
+        timeInterval = setInterval(showTime, 100) //repetir la accion cada 100 ms e imprimir el tiempo con la funcion creada
+    }
+
     //Si ya no hay mapas terminar el juego
     const mapRows = map.trim().split('\n'); //array para crear los strings que forman las columnas osea en cada salto de linea y asi conseguir las filas del mapa
     const mapRowCols = mapRows.map(row => row.trim().split('')); //para conseguir filas y cada elemento es un elemento de un arreglo (Array bidimensional del string de nuestro mapa)
@@ -160,6 +175,7 @@ function levelFail() {
     if (lives <= 0) {
         level = 0;
         lives = 3;
+        timeStart = undefined; //Resetear el tiempo con undefined
     }
     //resetear las posiciones del jugador como undefined para que al renderizar lo coloque a posicion inciial
     playerPosition.x = undefined;
@@ -169,6 +185,7 @@ function levelFail() {
 
 function gameWin() {
     console.log('Terminaste el juego !!!!');
+    clearInterval(timeInterval); //detener el ciclo
 }
 
 function showLives() {
@@ -177,6 +194,11 @@ function showLives() {
 
     spanLives.innerHTML = ""; //limpiar para que no acumule sin control
     hearstsArray.forEach(heart => spanLives.append(heart)); //insertar corazon al array utilizando append para que sume por cada ciclo
+}
+
+function showTime() {
+
+    spanTime.innerHTML = Date.now() - timeStart; //poner el tiempo en el span
 }
 
 //Detectar el evento de los botones de la plantalla que relaciona las funciones tecla + funcion (que quiero hacer?)
