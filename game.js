@@ -1,4 +1,4 @@
-console.log(maps);
+//console.log(maps);
 
 //DECLARAR
 const canvas = document.querySelector("#game"); //la seleccionamos para empezar a utilizar por su id
@@ -46,28 +46,36 @@ let enemyPositions = [];
 window.addEventListener("load", setCanvasSize); //evento ''load'' para que apenas cargue iniciar codigo
 window.addEventListener('resize', setCanvasSize); //evento ''resize'' para saber cuando cambian las medidas de nuestro navegador
 
+function fixNumber(n){
+    return Number(n.toFixed(2));
+}
+
 //crear una funcion para reutilizar, encapsular y organizar codigo inicial del juego
-
-
 function setCanvasSize() {
 
     //calculo para que nunca sobrepase las medidas y pierda la forma cuadrada
     if (window.innerHeight > window.innerWidth) {
-        canvasSize = window.innerWidth * 0.8; //tome la medida del ancho
+        canvasSize = window.innerWidth * 0.7; //tome la medida del ancho
     } else {
-        canvasSize = window.innerHeight * 0.8; //tome la medida del alto
+        canvasSize = window.innerHeight * 0.7; //tome la medida del alto
     }
+
+    canvasSize = Number(canvasSize.toFixed(0));//quitar decimales y convertir a numero para evitar errores con decimales
 
     //ancho responsivo
     canvas.setAttribute('width', canvasSize);
     canvas.setAttribute('height', canvasSize);
 
     elementsSize = canvasSize / 10;
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
 
     startGame();
 }
 
 function startGame() {
+    console.log({ canvasSize, elementsSize});
+    console.log( window.innerWidth, window.innerHeight);
 
     game.font = elementsSize + 'px Verdana'; //Le damos tamaño de manera dinamica e indicamos tipo fuente
     game.textAlign = 'end'; //posicionarlo al inicio de la 1ra linea
@@ -109,9 +117,9 @@ function startGame() {
                 if (!playerPosition.x && !playerPosition.y) {
                     playerPosition.x = posX; //llamamos a la prodiedad x del objeto player Position
                     playerPosition.y = posY; //llamamos a la prodiedad y del objeto player Position
-                    console.log({
+                    /* console.log({
                         playerPosition
-                    });
+                    }); */
                 }
             } else if (col == 'I') {
                 giftPosition.x = posX;
